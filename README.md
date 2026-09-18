@@ -1,67 +1,62 @@
-# 世界时钟 · Windows 11
+# 世界时钟 · v1.1.0
 
-使用 Python + PySide6 制作的半透明圆角桌面悬浮卡片，默认显示北京、迪拜、卢萨卡（赞比亚）。
+适用于 Windows 11 x64 的半透明桌面时钟，支持世界城市、联网天气和日出日落。
 
-## 下载 EXE（无需 Python）
+## 下载与升级
 
-前往 [Releases](https://github.com/ChunjiaYi/world-clock/releases/latest)，下载 `WorldClock.exe`，双击即可运行。
-Windows 11 x64；也可下载完整 ZIP，包含 EXE、使用说明及第三方许可证。
+在 [Releases](https://github.com/ChunjiaYi/world-clock/releases/latest) 下载 `WorldClock-v1.1.0-windows-x64.zip`，完整解压后双击文件夹中的 `WorldClock.exe`。无需安装 Python。这是免安装便携包，请保留同目录下的 `_internal` 文件夹，不要单独移动 EXE。
 
-## 从源码启动
+升级时从系统托盘退出旧版，将新版完整解压到独立文件夹并运行。旧版城市、位置、透明度会自动迁移；v1.1.0 首次迁移默认启用置顶。已启用开机自启的用户如更换 EXE 位置，请在新版中关闭再开启开机自启。
 
-1. 安装 64 位 Python 3.10 或更新的兼容版本（推荐 3.12 或 3.13），安装时勾选 Add Python to PATH。
-2. 将整个文件夹解压到可写的位置，双击 `start.bat`。
-3. 首次启动会在当前文件夹创建 `.venv` 并联网安装依赖。以后可离线启动。
+## v1.1.0 功能
 
-也可以在此文件夹打开终端，执行：
-
-```powershell
-python -m pip install -r requirements.txt
-python world_clock.py
-```
+1. **开机自启**：托盘右键勾选，默认关闭，仅影响当前 Windows 用户，无需管理员权限。
+2. **联网天气和日出日落**：每 15 分钟更新，太阳/月亮按城市当天日出日落切换。极昼极夜可使用服务提供的当前昼夜状态；无有效数据时显示空心圆，不猜测昼夜。
+3. **默认置顶**：每张卡片可在设置中关闭。
+4. **显示内容开关**：城市、地区/国家、日期、星期、时差、天气、太阳/月亮、日出日落时间。
+5. **本地保存**：拖动后自动保存；托盘右键可手动保存全部位置和设置，也可导出 JSON。
+6. **联网搜索城市**：输入中文、英文或拼音，结果显示地区、国家和时区，避免同名城市选错。
+7. **显示/隐藏秒**：每张卡片独立设置。
+8. **自定义卡片颜色**：支持颜色选择器，或跟随系统浅色/深色；背景透明度 0–100%，文字保持可见。
 
 ## 操作
 
-- 左键拖动：移动单个卡片，松开后自动保存位置。
-- 右键：添加/更换城市、始终置顶、外观模式、背景透明度、移除或退出。
-- 背景透明度支持 0–100% 滑块和数字输入，实时预览；0% 不透明，100% 背景完全透明，文字保持可见。确定保存，取消恢复原值。
-- 外观模式支持跟随系统、白天（浅色）、夜晚（深色）。新卡片默认跟随系统，Windows 的应用浅色/深色设置改变时自动切换，无需重启。原有深色卡片保留深色选择。
-- 添加城市支持输入标准 IANA 时区，例如 `Africa/Lusaka`。
-- 系统托盘右键可以重新显示所有卡片或退出。
-- 日期右侧的时差，相对于 Windows 当前本地时区计算；支持半小时时差。
-- 太阳/月亮仅表示当地 06:00–18:00 / 其余时间，不是天气或真实日出日落。
-- 显示时间来自电脑系统时钟，采用 IANA 时区数据库自动换算夏令时。
-- 城市、外观、位置保存在用户应用数据目录 `WorldClockPython/clocks.json`。
+- 左键拖动卡片。
+- 卡片右键 → **卡片设置**，调整外观和显示内容，实时预览；取消会恢复原设置。
+- 卡片右键 → 添加/更换城市、立即更新天气、保存设置。
+- 系统托盘右键 → 开机自启、保存位置和设置、导出、显示全部、更新天气、退出。
+- 日期旁时差以 Windows 本地时区为基准，自动处理夏令时和半小时时区。
+- 设置保存在 `%APPDATA%\WorldClockPython\clocks.json`，包含城市坐标与天气缓存。
+- 程序不修改系统时间、不读取设备定位、不自动开启开机自启。离线时仍可看时间；已有天气会显示“缓存”。
 
-## 实现范围
+天气及城市服务：Open-Meteo / GeoNames；天气数据 CC BY 4.0，按接口可用性更新，主要用于个人非商业使用。城市搜索词、所选城市坐标和时区会发送给 Open-Meteo，不发送个人设置文件。数据来源也可在托盘“关于”中查看。
 
-这是独立的无边框桌面悬浮程序，不是 Win+W 小组件面板插件。默认不置顶，其他窗口可覆盖它；可通过右键启用置顶。没有使用 Explorer 桌面嵌入，Win+D 的行为由 Windows 管理，可从托盘重新显示。
+## QtCore 启动错误修复
 
-背景是半透明填色，不是真实毛玻璃模糊。应用不修改壁纸，不默认设置开机启动。
+v1.0 的本地打包环境曾将其他工具目录中的运行库带入 EXE。v1.1.0 固定 Qt 依赖版本，在清理后的 DLL 搜索路径下打包，并检查依赖清单，避免混入不兼容的运行库。
 
-## 技术参考
+## 从源码运行或打包
 
-- Qt 透明窗口：https://doc.qt.io/qtforpython-6/PySide6/QtWidgets/QWidget.html
-- Python 时区：https://docs.python.org/3/library/zoneinfo.html
-
-Windows 通常不内置 IANA 时区数据库，因此依赖中包含 tzdata。
-
-## 打包 EXE
-
-在 Windows 的 Python 环境中执行：
+推荐官方 Python 3.13 x64，在独立虚拟环境中执行：
 
 ```powershell
-python -m pip install -r requirements-build.txt
-python build.py
+python -m venv .venv
+.venv\Scripts\python -m pip install -r requirements-build.txt
+.venv\Scripts\python world_clock.py
+.venv\Scripts\python build.py
 ```
 
-输出为 `dist/WorldClock.exe`。程序包含 Python、Qt 和时区数据库，运行时无需联网安装依赖。
+也可双击 `start.bat`（首次联网安装依赖）。打包输出为 `dist/WorldClock/WorldClock.exe`，发布时需包含整个 `dist/WorldClock` 文件夹。
 
-打包后可运行独立启动检查（不会读取或修改个人时钟设置）：
+验证最终 EXE（测试不会修改个人设置或开机自启）：
 
 ```powershell
-Start-Process -FilePath .\dist\WorldClock.exe -ArgumentList '--smoke-test', 'smoke-result.txt' -Wait
+Start-Process -FilePath .\dist\WorldClock\WorldClock.exe -ArgumentList '--smoke-test', 'smoke-result.txt' -Wait
 Get-Content smoke-result.txt
 ```
 
-第三方组件说明见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+## 实现范围
+
+独立悬浮窗口，不嵌入 Explorer 桌面，也不是 Win+W 面板插件。背景是半透明填色，无毛玻璃模糊。本版本未做商业代码签名。
+
+第三方组件与许可证见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。

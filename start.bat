@@ -11,7 +11,7 @@ if not exist ".venv\Scripts\python.exe" (
   %PYTHON_CMD% -m venv .venv
   if errorlevel 1 goto failed
 )
-".venv\Scripts\python.exe" -c "import PySide6, tzdata" >nul 2>nul
+".venv\Scripts\python.exe" -c "import importlib.metadata as m; assert m.version('PySide6-Essentials') == '6.8.3'; assert m.version('tzdata') == '2026.4'" >nul 2>nul
 if errorlevel 1 (
   ".venv\Scripts\python.exe" -m pip install -r requirements.txt
   if errorlevel 1 goto failed
